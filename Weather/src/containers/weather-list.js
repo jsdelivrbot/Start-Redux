@@ -1,15 +1,21 @@
 import React,{Component} from "react";
 import {connect} from "react-redux";
-import {Line} from 'react-chartjs-2';
-
+import {Line} from "react-chartjs-2";
+import moment from "moment";
 //import {Sparklines,SparklinesLine} from "react-sparklines";
 
 class WeatherList extends Component{
   renderWeather(cityData){
     const name = cityData.city.name;
     const temps = cityData.list.map(weather => weather.main.temp);
+    const times = [];
+    cityData.list.map((time) =>{
+      var timestamp = moment.unix(time.dt);
+      times.push(timestamp.format("HH:MM"));
+    });
+    //console.log(times);
     const data = {
-  labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+  labels: times,
   datasets: [
     {
       label: 'My First dataset',
@@ -43,7 +49,13 @@ class WeatherList extends Component{
         <tr key = {name}>
           <td>{name}</td>
           <td>
-            <Line data={data} height={120} width={180}/>
+            <Line
+              data={data}
+              height={180}
+              width={100}
+              options={{
+		              maintainAspectRatio: false
+	            }} />
           </td>
         </tr>
     );
